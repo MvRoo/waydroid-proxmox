@@ -70,13 +70,13 @@ pve_check() {
   local PVE_VER
   PVE_VER="$(pveversion | awk -F'/' '{print $2}' | awk -F'-' '{print $1}')"
 
-  # Check for Proxmox VE 8.x: allow 8.0–8.9
-  if [[ "$PVE_VER" =~ ^8\.([0-9])$ ]]; then
+  # Check for Proxmox VE 8.x: allow 8.0–8.9 (with optional patch versions)
+  if [[ "$PVE_VER" =~ ^8\.[0-9]($|\.) ]]; then
     return 0
   fi
 
-  # Check for Proxmox VE 9.x: allow 9.0–9.9
-  if [[ "$PVE_VER" =~ ^9\.([0-9])$ ]]; then
+  # Check for Proxmox VE 9.x: allow 9.0–9.9 (with optional patch versions)
+  if [[ "$PVE_VER" =~ ^9\.[0-9]($|\.) ]]; then
     return 0
   fi
 
