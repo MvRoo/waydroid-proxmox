@@ -97,7 +97,7 @@ apt update && apt upgrade -y
 
 # Clone repository
 cd /tmp
-git clone https://github.com/iceteaSA/waydroid-proxmox.git
+git clone https://github.com/MvRoo/waydroid-proxmox.git
 cd waydroid-proxmox
 
 # Check for Debian 13 compatibility notes

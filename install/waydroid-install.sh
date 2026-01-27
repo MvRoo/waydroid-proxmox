@@ -3,7 +3,7 @@
 # Copyright (c) 2021-2025 community-scripts ORG
 # Author: iceteaSA
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://github.com/iceteaSA/waydroid-proxmox
+# Source: https://github.com/MvRoo/waydroid-proxmox
 
 source /dev/stdin <<<"$FUNCTIONS_FILE_PATH"
 color

@@ -37,7 +37,7 @@ Run Android applications on Proxmox using Waydroid in an LXC container with full
 Run this single command on your Proxmox host:
 
 ```bash
-bash -c "$(curl -fsSL https://raw.githubusercontent.com/iceteaSA/waydroid-proxmox/main/ct/waydroid.sh)"
+bash -c "$(curl -fsSL https://raw.githubusercontent.com/MvRoo/waydroid-proxmox/main/ct/waydroid.sh)"
 ```
 
 **That's it!** The installer will:
@@ -227,7 +227,7 @@ This repository includes comprehensive security validation to ensure the scripts
 **Quick Security Check:**
 ```bash
 # Clone and validate before running
-git clone https://github.com/iceteaSA/waydroid-proxmox.git
+git clone https://github.com/MvRoo/waydroid-proxmox.git
 cd waydroid-proxmox
 bash scripts/security-check.sh
 ```
@@ -327,6 +327,6 @@ MIT License - see LICENSE file for details.
 
 ## Support
 
-- **Issues**: [GitHub Issues](https://github.com/iceteaSA/waydroid-proxmox/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/iceteaSA/waydroid-proxmox/discussions)
+- **Issues**: [GitHub Issues](https://github.com/MvRoo/waydroid-proxmox/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/MvRoo/waydroid-proxmox/discussions)
 - **Waydroid Docs**: [docs.waydro.id](https://docs.waydro.id)

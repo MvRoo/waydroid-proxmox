@@ -5,7 +5,7 @@
 #
 # Copyright (c) 2025
 # License: MIT
-# https://github.com/iceteaSA/waydroid-proxmox
+# https://github.com/MvRoo/waydroid-proxmox
 #
 # This script provides a menu-driven interface to configure and apply
 # all available enhancements for Waydroid running in Proxmox LXC containers.
@@ -226,7 +226,7 @@ Enhancement Details:
        Requires: Waydroid initialized
 
 For more information, visit:
-https://github.com/iceteaSA/waydroid-proxmox
+https://github.com/MvRoo/waydroid-proxmox
 
 EOF
 }

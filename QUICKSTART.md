@@ -49,7 +49,7 @@ ssh root@your-proxmox-ip
 
 # 2. Clone the repository
 cd /tmp
-git clone https://github.com/iceteaSA/waydroid-proxmox.git
+git clone https://github.com/MvRoo/waydroid-proxmox.git
 cd waydroid-proxmox
 
 # 3. Make scripts executable
@@ -210,7 +210,7 @@ ssh root@your-proxmox-ip
 
 # Clone repository
 cd /tmp
-git clone https://github.com/iceteaSA/waydroid-proxmox.git
+git clone https://github.com/MvRoo/waydroid-proxmox.git
 cd waydroid-proxmox
 chmod +x install/install.sh scripts/*.sh
 
@@ -1426,8 +1426,8 @@ pct exec <CTID> -- tar czf /root/waydroid-backup-$(date +%Y%m%d).tar.gz ~/.local
 - **[Home Assistant](https://www.home-assistant.io/)** - Home automation platform
 
 ### Community & Support
-- **[GitHub Issues](https://github.com/iceteaSA/waydroid-proxmox/issues)** - Bug reports and feature requests
-- **[GitHub Discussions](https://github.com/iceteaSA/waydroid-proxmox/discussions)** - Community support
+- **[GitHub Issues](https://github.com/MvRoo/waydroid-proxmox/issues)** - Bug reports and feature requests
+- **[GitHub Discussions](https://github.com/MvRoo/waydroid-proxmox/discussions)** - Community support
 - **[Waydroid Community](https://github.com/waydroid/waydroid/discussions)** - Waydroid discussions
 
 ---
@@ -1471,7 +1471,7 @@ After completing your setup:
 5. **Set Up Monitoring** - Enable health checks and performance monitoring
 6. **Create Backups** - Regular container backups for safety
 
-**Need Help?** Check [Troubleshooting](#troubleshooting-quick-reference) or open an [issue on GitHub](https://github.com/iceteaSA/waydroid-proxmox/issues).
+**Need Help?** Check [Troubleshooting](#troubleshooting-quick-reference) or open an [issue on GitHub](https://github.com/MvRoo/waydroid-proxmox/issues).
 
 ---
 

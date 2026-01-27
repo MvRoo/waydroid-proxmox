@@ -680,8 +680,8 @@ Expected improvements after tuning (measured on Intel N150):
 
 ## Support
 
-- **Issues**: [GitHub Issues](https://github.com/iceteaSA/waydroid-proxmox/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/iceteaSA/waydroid-proxmox/discussions)
+- **Issues**: [GitHub Issues](https://github.com/MvRoo/waydroid-proxmox/issues)
+- **Discussions**: [GitHub Discussions](https://github.com/MvRoo/waydroid-proxmox/discussions)
 
 ## License
 

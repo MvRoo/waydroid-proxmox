@@ -3,7 +3,7 @@
 # Waydroid Audio Passthrough Setup Script
 # Copyright (c) 2025
 # License: MIT
-# https://github.com/iceteaSA/waydroid-proxmox
+# https://github.com/MvRoo/waydroid-proxmox
 #
 # This script configures audio passthrough for Waydroid running in LXC containers
 # on Proxmox VE. It supports both PulseAudio and PipeWire.
@@ -961,7 +961,7 @@ ADDITIONAL RESOURCES
 • Proxmox LXC Documentation: https://pve.proxmox.com/wiki/Linux_Container
 
 Need more help? Open an issue at:
-https://github.com/iceteaSA/waydroid-proxmox/issues
+https://github.com/MvRoo/waydroid-proxmox/issues
 
 EOF
 }
