@@ -75,7 +75,7 @@ First boot takes 2-3 minutes while Android initializes.
 - **Storage**: 16GB+ free space
 
 ### Software
-- Proxmox VE 7.x or 8.x
+- Proxmox VE 7.x, 8.x, or 9.x
 - Kernel 5.15+ with binder support
 - For GPU passthrough: Privileged LXC container
 

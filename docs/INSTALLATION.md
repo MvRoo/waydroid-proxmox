@@ -19,7 +19,7 @@ Complete installation guide for Waydroid LXC on Proxmox with Intel N150 SoC.
   - NVIDIA GPUs use software rendering only
 - **RAM**: Minimum 4GB (8GB recommended)
 - **Storage**: 20GB free space for LXC container
-- **Proxmox**: Version 7.x or 8.x
+- **Proxmox**: Version 7.x, 8.x, or 9.x
 
 ### Software Requirements
 
