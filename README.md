@@ -220,6 +220,35 @@ Typical resource usage:
 
 ## Security
 
+### Security Validation
+
+This repository includes comprehensive security validation to ensure the scripts are safe to run:
+
+**Quick Security Check:**
+```bash
+# Clone and validate before running
+git clone https://github.com/iceteaSA/waydroid-proxmox.git
+cd waydroid-proxmox
+bash scripts/security-check.sh
+```
+
+**Full Security Analysis:**
+See [SECURITY-ANALYSIS.md](SECURITY-ANALYSIS.md) for a complete security audit of all bash scripts, including:
+- Analysis of 44+ bash scripts
+- Network access validation  
+- Credential handling review
+- Dangerous command detection
+- Code obfuscation checks
+- Backdoor detection
+
+**Security Summary:**
+✅ No malicious code detected  
+✅ No data exfiltration attempts  
+✅ Secure credential generation  
+✅ Proper file permissions  
+✅ Official repositories only  
+✅ Input validation present  
+
 ### Security Features
 - **Privilege Separation**: All services run as `waydroid` user (non-root)
 - **VNC Authentication**: Password-protected remote access
