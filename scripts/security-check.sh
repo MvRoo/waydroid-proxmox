@@ -125,8 +125,8 @@ check_dangerous_commands() {
         check_fail "Found potentially dangerous 'dd' commands"
     fi
     
-    # Check for eval with external input (code injection risk) - exclude test scripts
-    local eval_count=$(grep -rn "eval.*\$" "$REPO_ROOT" --include="*.sh" --exclude-dir="archive" --exclude-dir="test*" 2>/dev/null | grep -v "^#" | wc -l)
+    # Check for eval with external input (code injection risk) - exclude test scripts and comments
+    local eval_count=$(grep -rn "eval.*\$" "$REPO_ROOT" --include="*.sh" --exclude-dir="archive" --exclude-dir="test*" 2>/dev/null | grep -v "^\s*#" | wc -l)
     if [ "$eval_count" -eq 0 ]; then
         check_pass "No 'eval' with variable expansion found"
     else
@@ -134,7 +134,7 @@ check_dangerous_commands() {
     fi
     
     # Check for chmod 777 (overly permissive) - exclude socket/runtime dirs where it's necessary
-    local chmod_777=$(grep -r "chmod 777" "$REPO_ROOT" --include="*.sh" --exclude-dir="archive" 2>/dev/null | grep -v "wayland\|socket\|runtime" | wc -l)
+    local chmod_777=$(grep -r "chmod 777" "$REPO_ROOT" --include="*.sh" --exclude-dir="archive" 2>/dev/null | grep -Ev "wayland|socket|runtime" | wc -l)
     if [ "$chmod_777" -eq 0 ]; then
         check_pass "No 'chmod 777' (overly permissive permissions) found"
     else
@@ -147,7 +147,7 @@ check_credential_theft() {
     print_section "Checking for Credential Theft Attempts"
     
     # Check for .ssh directory manipulation
-    local ssh_access=$(grep -r "\.ssh\|id_rsa\|authorized_keys" "$REPO_ROOT" --include="*.sh" 2>/dev/null | grep -v "^#" | wc -l)
+    local ssh_access=$(grep -rE '\.ssh|id_rsa|authorized_keys' "$REPO_ROOT" --include="*.sh" 2>/dev/null | grep -v "^\s*#" | wc -l)
     if [ "$ssh_access" -eq 0 ]; then
         check_pass "No SSH key manipulation detected"
     else
@@ -176,15 +176,17 @@ check_obfuscation() {
     print_section "Checking for Code Obfuscation"
     
     # Check for base64 encoded commands (potential malware) - excluding base64 password generation
-    local base64_exec=$(grep -r "base64.*|.*sh\|base64.*|.*bash\|echo.*|.*base64.*-d.*|.*sh" "$REPO_ROOT" --include="*.sh" 2>/dev/null | grep -v "openssl rand.*base64\|base64.*password\|base64.*token" | wc -l)
-    if [ "$base64_exec" -eq 0 ]; then
+    local base64_exec=$(grep -rE "base64.*\|.*(sh|bash)" "$REPO_ROOT" --include="*.sh" --exclude="security-check.sh" 2>/dev/null | grep -Ev "openssl rand.*base64|base64.*password|base64.*token" | wc -l)
+    local base64_decode=$(grep -rE "echo.*\|.*base64.*-d.*\|.*(sh|bash)" "$REPO_ROOT" --include="*.sh" --exclude="security-check.sh" 2>/dev/null | wc -l)
+    local total_suspicious=$((base64_exec + base64_decode))
+    if [ "$total_suspicious" -eq 0 ]; then
         check_pass "No base64-encoded command execution found"
     else
         check_fail "Found base64-encoded command execution (obfuscation)"
     fi
     
-    # Check for hex-encoded strings
-    local hex_strings=$(grep -r "\\\\x[0-9a-f][0-9a-f]" "$REPO_ROOT" --include="*.sh" 2>/dev/null | wc -l)
+    # Check for hex-encoded strings (properly escaped for grep)
+    local hex_strings=$(grep -rE '\\\\x[0-9a-fA-F]{2}' "$REPO_ROOT" --include="*.sh" 2>/dev/null | wc -l)
     if [ "$hex_strings" -eq 0 ]; then
         check_pass "No suspicious hex-encoded strings found"
     else
@@ -218,15 +220,17 @@ check_backdoors() {
     print_section "Checking for Backdoors and Persistence"
     
     # Check for unauthorized cron job creation (excluding documentation examples)
-    local cron_mods=$(grep -r "crontab -e\|echo.*>.*cron" "$REPO_ROOT" --include="*.sh" 2>/dev/null | grep -v "^#" | grep -v "Example\|example" | wc -l)
-    if [ "$cron_mods" -eq 0 ]; then
+    local cron_mods=$(grep -r "crontab -e" "$REPO_ROOT" --include="*.sh" 2>/dev/null | grep -v "^\s*#" | grep -Evi "Example|example" | wc -l)
+    local cron_writes=$(grep -rE "echo.*>.*cron" "$REPO_ROOT" --include="*.sh" 2>/dev/null | grep -v "^\s*#" | grep -Evi "Example|example" | wc -l)
+    local total_cron=$((cron_mods + cron_writes))
+    if [ "$total_cron" -eq 0 ]; then
         check_pass "No unauthorized cron job modifications"
     else
-        check_warn "Found $cron_mods cron modifications (review needed)"
+        check_warn "Found $total_cron cron modifications (review needed)"
     fi
     
     # Check for hidden processes or background connections (excluding documentation)
-    local background_nc=$(grep -r "nc -l\|netcat -l\|ncat -l" "$REPO_ROOT" --include="*.sh" 2>/dev/null | grep -v "^#" | grep -v "example\|Example\|test" | wc -l)
+    local background_nc=$(grep -rE "nc -l|netcat -l|ncat -l" "$REPO_ROOT" --include="*.sh" 2>/dev/null | grep -v "^\s*#" | grep -Evi "example|Example|test" | wc -l)
     if [ "$background_nc" -eq 0 ]; then
         check_pass "No unauthorized listening ports (nc/netcat)"
     else
@@ -234,7 +238,8 @@ check_backdoors() {
     fi
     
     # Check for suspicious systemd service creation to unknown binaries
-    local systemd_services=$(grep -r "ExecStart=/tmp" "$REPO_ROOT" --include="*.sh" --exclude="security-check.sh" 2>/dev/null | grep -v "waydroid-setup\.sh\|waydroid-env\.sh" || echo "")
+    # Use --exclude to properly exclude files (not grep output)
+    local systemd_services=$(grep -r "ExecStart=/tmp/" "$REPO_ROOT" --include="*.sh" --exclude="security-check.sh" 2>/dev/null | grep -Ev "waydroid-setup\.sh|waydroid-env\.sh" || echo "")
     local suspicious_exec=0
     if [ -n "$systemd_services" ]; then
         suspicious_exec=$(echo "$systemd_services" | wc -l)
@@ -267,8 +272,8 @@ check_repository_sources() {
 check_input_validation() {
     print_section "Checking Input Validation"
     
-    # Look for parameter validation patterns
-    local validation_patterns=$(grep -r "^\s*if.*\[\[.*=\~" "$REPO_ROOT" --include="*.sh" 2>/dev/null | wc -l)
+    # Look for parameter validation patterns (regex operator is =~)
+    local validation_patterns=$(grep -rE '^\s*if.*\[\[.*=~' "$REPO_ROOT" --include="*.sh" 2>/dev/null | wc -l)
     if [ "$validation_patterns" -gt 3 ]; then
         check_pass "Input validation patterns found ($validation_patterns instances)"
     else
