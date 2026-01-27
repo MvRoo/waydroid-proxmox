@@ -74,7 +74,7 @@ check_data_exfiltration() {
         "api.github.com"
     )
     
-    # Extract all URLs from shell scripts
+    # Extract all URLs from shell scripts (use -E for better compatibility)
     while IFS= read -r url; do
         local is_trusted=false
         for domain in "${trusted_domains[@]}"; do
@@ -96,7 +96,7 @@ check_data_exfiltration() {
                 SUSPICIOUS_PATTERNS+=("IP-based URL: $url")
             fi
         fi
-    done < <(grep -rh "https\?://" "$REPO_ROOT" --include="*.sh" 2>/dev/null | grep -oP 'https?://[^"'\'' ]+' | sort -u)
+    done < <(grep -rhE 'https?://[^"'\'' ]+' "$REPO_ROOT" --include="*.sh" 2>/dev/null | sort -u)
     
     if [ $suspicious_urls -eq 0 ]; then
         check_pass "No suspicious external connections found"
@@ -125,8 +125,8 @@ check_dangerous_commands() {
         check_fail "Found potentially dangerous 'dd' commands"
     fi
     
-    # Check for eval with external input (code injection risk) - exclude test scripts and comments
-    local eval_count=$(grep -rn "eval.*\$" "$REPO_ROOT" --include="*.sh" --exclude-dir="archive" --exclude-dir="test*" 2>/dev/null | grep -v "^\s*#" | wc -l)
+    # Check for eval with external input (use -E for proper regex)
+    local eval_count=$(grep -rEn "eval.*\$" "$REPO_ROOT" --include="*.sh" --exclude-dir="archive" --exclude-dir="test*" 2>/dev/null | grep -Ev "^[[:space:]]*#" | wc -l)
     if [ "$eval_count" -eq 0 ]; then
         check_pass "No 'eval' with variable expansion found"
     else
@@ -146,24 +146,24 @@ check_dangerous_commands() {
 check_credential_theft() {
     print_section "Checking for Credential Theft Attempts"
     
-    # Check for .ssh directory manipulation
-    local ssh_access=$(grep -rE '\.ssh|id_rsa|authorized_keys' "$REPO_ROOT" --include="*.sh" 2>/dev/null | grep -v "^\s*#" | wc -l)
+    # Check for SSH file references (use -E for \s)
+    local ssh_access=$(grep -rE '\.ssh|id_rsa|authorized_keys' "$REPO_ROOT" --include="*.sh" 2>/dev/null | grep -Ev "^[[:space:]]*#" | wc -l)
     if [ "$ssh_access" -eq 0 ]; then
         check_pass "No SSH key manipulation detected"
     else
         check_warn "Found $ssh_access references to SSH files (review needed)"
     fi
     
-    # Check for /etc/shadow or /etc/passwd manipulation (excluding this script)
-    local passwd_access=$(grep -r "/etc/shadow\|/etc/passwd" "$REPO_ROOT" --include="*.sh" --exclude="security-check.sh" 2>/dev/null | grep -v "^#" | grep -v "grep" | grep -v "echo\|cat /etc/os-release\|PRETTY_NAME" | wc -l)
+    # Check for /etc/shadow or /etc/passwd manipulation (use -E for proper regex)
+    local passwd_access=$(grep -rE "/etc/shadow|/etc/passwd" "$REPO_ROOT" --include="*.sh" --exclude="security-check.sh" 2>/dev/null | grep -Ev "^[[:space:]]*#|grep|echo|cat /etc/os-release|PRETTY_NAME" | wc -l)
     if [ "$passwd_access" -eq 0 ]; then
         check_pass "No password file manipulation detected"
     else
         check_fail "Found manipulation of /etc/shadow or /etc/passwd"
     fi
     
-    # Check for credential scraping patterns (excluding this script)
-    local scraping=$(grep -r "cat.*\.bash_history\|cat.*\.mysql_history" "$REPO_ROOT" --include="*.sh" --exclude="security-check.sh" 2>/dev/null | grep -v "^#" | wc -l)
+    # Check for credential scraping patterns (use -E for proper regex)
+    local scraping=$(grep -rE "cat.*/\.bash_history|cat.*/\.mysql_history" "$REPO_ROOT" --include="*.sh" --exclude="security-check.sh" 2>/dev/null | grep -Ev "^[[:space:]]*#" | wc -l)
     if [ "$scraping" -eq 0 ]; then
         check_pass "No credential scraping patterns detected"
     else
@@ -185,8 +185,8 @@ check_obfuscation() {
         check_fail "Found base64-encoded command execution (obfuscation)"
     fi
     
-    # Check for hex-encoded strings (properly escaped for grep)
-    local hex_strings=$(grep -rE '\\\\x[0-9a-fA-F]{2}' "$REPO_ROOT" --include="*.sh" 2>/dev/null | wc -l)
+    # Check for hex-encoded strings (properly escaped for grep -E)
+    local hex_strings=$(grep -rE '\\x[0-9a-fA-F]{2}' "$REPO_ROOT" --include="*.sh" 2>/dev/null | wc -l)
     if [ "$hex_strings" -eq 0 ]; then
         check_pass "No suspicious hex-encoded strings found"
     else
@@ -219,9 +219,9 @@ check_credential_security() {
 check_backdoors() {
     print_section "Checking for Backdoors and Persistence"
     
-    # Check for unauthorized cron job creation (excluding documentation examples)
-    local cron_mods=$(grep -r "crontab -e" "$REPO_ROOT" --include="*.sh" 2>/dev/null | grep -v "^\s*#" | grep -Evi "Example|example" | wc -l)
-    local cron_writes=$(grep -rE "echo.*>.*cron" "$REPO_ROOT" --include="*.sh" 2>/dev/null | grep -v "^\s*#" | grep -Evi "Example|example" | wc -l)
+    # Check for unauthorized cron job creation (use -E for proper regex)
+    local cron_mods=$(grep -rE "crontab -e" "$REPO_ROOT" --include="*.sh" 2>/dev/null | grep -Ev "^[[:space:]]*#" | grep -Evi "Example|example" | wc -l)
+    local cron_writes=$(grep -rE "echo.*>.*cron" "$REPO_ROOT" --include="*.sh" 2>/dev/null | grep -Ev "^[[:space:]]*#" | grep -Evi "Example|example" | wc -l)
     local total_cron=$((cron_mods + cron_writes))
     if [ "$total_cron" -eq 0 ]; then
         check_pass "No unauthorized cron job modifications"
@@ -272,8 +272,8 @@ check_repository_sources() {
 check_input_validation() {
     print_section "Checking Input Validation"
     
-    # Look for parameter validation patterns (regex operator is =~)
-    local validation_patterns=$(grep -rE '^\s*if.*\[\[.*=~' "$REPO_ROOT" --include="*.sh" 2>/dev/null | wc -l)
+    # Look for parameter validation patterns (use -E for regex operator =~)
+    local validation_patterns=$(grep -rE '^[[:space:]]*if.*\[\[.*=~' "$REPO_ROOT" --include="*.sh" 2>/dev/null | wc -l)
     if [ "$validation_patterns" -gt 3 ]; then
         check_pass "Input validation patterns found ($validation_patterns instances)"
     else
