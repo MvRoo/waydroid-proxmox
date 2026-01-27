@@ -21,7 +21,7 @@ The scripts in this repository are **legitimate and safe to run** on a Proxmox s
 - `https://repo.waydro.id/` - Official Waydroid repository (GPG-signed)
 - `https://api.github.com/repos/waydroid/waydroid/releases/latest` - GitHub API for version checking
 - `https://github.com/casualsnek/waydroid_script` - Official Waydroid helper scripts
-- `https://raw.githubusercontent.com/iceteaSA/waydroid-proxmox/` - This repository's own resources
+- `https://raw.githubusercontent.com/MvRoo/waydroid-proxmox/` - This repository's own resources
 - `https://f-droid.org/repo` - Official F-Droid Android app repository (example usage)
 
 **Assessment**: All external connections are to legitimate, well-known repositories and services. No suspicious domains or data exfiltration endpoints detected.

@@ -9,7 +9,7 @@ The streamlined, production-ready installer for Waydroid on Proxmox VE.
 Run this single command on your Proxmox host:
 
 ```bash
-bash -c "$(curl -fsSL https://raw.githubusercontent.com/iceteaSA/waydroid-proxmox/main/ct/waydroid.sh)"
+bash -c "$(curl -fsSL https://raw.githubusercontent.com/MvRoo/waydroid-proxmox/main/ct/waydroid.sh)"
 ```
 
 The installer will:
@@ -27,7 +27,7 @@ The installer will:
 For automated deployments or scripts:
 
 ```bash
-bash -c "$(curl -fsSL https://raw.githubusercontent.com/iceteaSA/waydroid-proxmox/main/ct/waydroid.sh)" -s -- \
+bash -c "$(curl -fsSL https://raw.githubusercontent.com/MvRoo/waydroid-proxmox/main/ct/waydroid.sh)" -s -- \
   --non-interactive \
   --ctid 200 \
   --gpu intel \
@@ -104,12 +104,12 @@ bash waydroid.sh --unprivileged --no-gapps
 
 From Proxmox host:
 ```bash
-pct exec 200 -- bash -c "$(curl -fsSL https://raw.githubusercontent.com/iceteaSA/waydroid-proxmox/main/ct/waydroid.sh)" -- --update
+pct exec 200 -- bash -c "$(curl -fsSL https://raw.githubusercontent.com/MvRoo/waydroid-proxmox/main/ct/waydroid.sh)" -- --update
 ```
 
 Or inside the container:
 ```bash
-bash -c "$(curl -fsSL https://raw.githubusercontent.com/iceteaSA/waydroid-proxmox/main/ct/waydroid.sh)" -- --update
+bash -c "$(curl -fsSL https://raw.githubusercontent.com/MvRoo/waydroid-proxmox/main/ct/waydroid.sh)" -- --update
 ```
 
 ## Environment Variables
@@ -322,7 +322,7 @@ MIT License - See [LICENSE](../LICENSE) file
 
 ## Contributing
 
-Issues and pull requests welcome at: https://github.com/iceteaSA/waydroid-proxmox
+Issues and pull requests welcome at: https://github.com/MvRoo/waydroid-proxmox
 
 ## Documentation
 

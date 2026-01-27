@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
 # Use local build.func with our custom install script URL
-source <(curl -fsSL https://raw.githubusercontent.com/iceteaSA/waydroid-proxmox/main/misc/build.func)
+source <(curl -fsSL https://raw.githubusercontent.com/MvRoo/waydroid-proxmox/main/misc/build.func)
 # Copyright (c) 2021-2025 community-scripts ORG
 # Author: iceteaSA
 # License: MIT | https://github.com/community-scripts/ProxmoxVE/raw/main/LICENSE
-# Source: https://github.com/iceteaSA/waydroid-proxmox
+# Source: https://github.com/MvRoo/waydroid-proxmox
 
 # App Default Values
 APP="Waydroid"

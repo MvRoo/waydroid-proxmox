@@ -533,7 +533,7 @@ create_systemd_service() {
     cat > /etc/systemd/system/${CLIPBOARD_SERVICE}.service <<EOF
 [Unit]
 Description=Waydroid Clipboard Sync Service
-Documentation=https://github.com/iceteaSA/waydroid-proxmox
+Documentation=https://github.com/MvRoo/waydroid-proxmox
 After=waydroid-container.service
 Wants=waydroid-container.service
 PartOf=waydroid.service

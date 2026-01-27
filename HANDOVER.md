@@ -164,7 +164,7 @@ pct create 104 \
 
 ```bash
 cd /tmp
-git clone https://github.com/iceteaSA/waydroid-proxmox.git
+git clone https://github.com/MvRoo/waydroid-proxmox.git
 cd waydroid-proxmox
 
 # Run installation script

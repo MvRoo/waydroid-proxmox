@@ -10,9 +10,9 @@
   "updateable": true,
   "privileged": true,
   "interface_port": 5900,
-  "documentation": "https://github.com/iceteaSA/waydroid-proxmox/blob/main/ct/README.md",
+  "documentation": "https://github.com/MvRoo/waydroid-proxmox/blob/main/ct/README.md",
   "website": "https://waydro.id",
-  "logo": "https://cdn.jsdelivr.net/gh/iceteaSA/waydroid-proxmox@main/docs/images/logo.png",
+  "logo": "https://cdn.jsdelivr.net/gh/MvRoo/waydroid-proxmox@main/docs/images/logo.png",
   "config_path": "/root/vnc-password.txt",
   "description": "Waydroid is a container-based platform for running Android applications on Linux systems. This implementation provides full GPU acceleration support (Intel, AMD, NVIDIA) with hardware-accelerated rendering, VNC remote access for Android desktop, Home Assistant REST API integration, clipboard sharing, audio passthrough, and optional Google Play Store integration. Perfect for smart home automation, controlling Android-only IoT devices, running security camera applications, or any use case requiring Android application execution on Proxmox VE.",
   "install_methods": [

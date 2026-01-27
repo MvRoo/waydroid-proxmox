@@ -47,7 +47,7 @@ For experienced users, run these commands on your Proxmox host:
 
 ```bash
 # Clone the repository
-git clone https://github.com/iceteaSA/waydroid-proxmox.git
+git clone https://github.com/MvRoo/waydroid-proxmox.git
 cd waydroid-proxmox
 
 # Make scripts executable
@@ -401,6 +401,6 @@ journalctl -xe
 
 ## Support
 
-- **Issues**: [GitHub Issues](https://github.com/iceteaSA/waydroid-proxmox/issues)
-- **Documentation**: [Full docs](https://github.com/iceteaSA/waydroid-proxmox/docs)
+- **Issues**: [GitHub Issues](https://github.com/MvRoo/waydroid-proxmox/issues)
+- **Documentation**: [Full docs](https://github.com/MvRoo/waydroid-proxmox/docs)
 - **Waydroid Docs**: [Official Waydroid Documentation](https://docs.waydro.id)
