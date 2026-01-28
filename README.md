@@ -103,9 +103,11 @@ vnc://192.168.1.100:5900
 - **Windows**: TigerVNC, RealVNC Viewer, UltraVNC
 - **Web Browser**: noVNC (if configured)
 
-**Get your VNC password:**
+**Get your VNC credentials:**
 ```bash
-# From inside the container
+# Username: waydroid (default)
+
+# Get VNC password from inside the container
 cat /root/vnc-password.txt
 
 # Or from Proxmox host
@@ -120,6 +122,8 @@ If you need SSH access, you can enable it manually:
 
 #### Enable SSH in Your Container:
 
+**⚠️ Security Note:** For best security, set up SSH key-based authentication first before enabling password authentication.
+
 ```bash
 # 1. Enter the container
 pct enter <container-id>
@@ -131,20 +135,40 @@ apt-get install -y openssh-server
 # 3. Enable and start SSH service
 systemctl enable ssh
 systemctl start ssh
+```
 
-# 4. (Optional) Set root password for SSH login
-passwd root
+**Option A: SSH Key-Based Authentication (Recommended)**
 
-# 5. (Optional) Configure SSH to allow root login with password
-# Edit /etc/ssh/sshd_config and ensure:
-# PermitRootLogin yes
-# PasswordAuthentication yes
-sed -i 's/#PermitRootLogin.*/PermitRootLogin yes/' /etc/ssh/sshd_config
-sed -i 's/PermitRootLogin.*/PermitRootLogin yes/' /etc/ssh/sshd_config
+```bash
+# From your client machine, copy your SSH public key
+ssh-copy-id root@<container-ip>
 
-# 6. Restart SSH service
+# Or manually add your key inside the container
+mkdir -p /root/.ssh
+chmod 700 /root/.ssh
+echo "your-public-key-here" >> /root/.ssh/authorized_keys
+chmod 600 /root/.ssh/authorized_keys
+
+# For improved security, disable password authentication
+sed -i 's/#*PasswordAuthentication.*/PasswordAuthentication no/' /etc/ssh/sshd_config
 systemctl restart ssh
 ```
+
+**Option B: Password Authentication (Less Secure)**
+
+```bash
+# Set root password for SSH login
+passwd root
+
+# Configure SSH to allow root login with password
+sed -i 's/#*PermitRootLogin.*/PermitRootLogin yes/' /etc/ssh/sshd_config
+sed -i 's/#*PasswordAuthentication.*/PasswordAuthentication yes/' /etc/ssh/sshd_config
+
+# Restart SSH service
+systemctl restart ssh
+```
+
+⚠️ **Warning:** Password authentication is vulnerable to brute-force attacks. Use strong passwords and consider using fail2ban or switching to key-based authentication.
 
 #### Connect via SSH:
 
@@ -154,19 +178,6 @@ ssh root@<container-ip>
 
 # Example
 ssh root@192.168.1.100
-```
-
-**Security Recommendation:** Use SSH key-based authentication instead of passwords:
-
-```bash
-# On your client machine, copy your SSH public key
-ssh-copy-id root@<container-ip>
-
-# Or manually add your key inside the container
-mkdir -p /root/.ssh
-chmod 700 /root/.ssh
-echo "your-public-key-here" >> /root/.ssh/authorized_keys
-chmod 600 /root/.ssh/authorized_keys
 ```
 
 ### 4. REST API (Programmatic)
