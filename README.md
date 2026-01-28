@@ -66,6 +66,145 @@ Once complete, you'll receive:
 
 First boot takes 2-3 minutes while Android initializes.
 
+## Connecting to Your Container
+
+There are multiple ways to access and manage your Waydroid LXC container:
+
+### 1. Proxmox Console (Direct Access)
+The most straightforward way to access your container:
+
+```bash
+# From Proxmox host, enter the container
+pct enter <container-id>
+
+# Example: If your container ID is 100
+pct enter 100
+```
+
+You can also use the Proxmox web UI:
+- Navigate to your container in the Proxmox web interface
+- Click on "Console" in the left menu
+- This gives you a root shell inside the container
+
+### 2. VNC Access (Graphical)
+For graphical access to the Android interface:
+
+**Connect with any VNC client:**
+```bash
+# VNC URL format
+vnc://<container-ip>:5900
+
+# Example
+vnc://192.168.1.100:5900
+```
+
+**VNC Clients:**
+- **Linux/macOS**: TigerVNC, RealVNC Viewer, Remmina
+- **Windows**: TigerVNC, RealVNC Viewer, UltraVNC
+- **Web Browser**: noVNC (if configured)
+
+**Get your VNC password:**
+```bash
+# From inside the container
+cat /root/vnc-password.txt
+
+# Or from Proxmox host
+pct exec <container-id> -- cat /root/vnc-password.txt
+```
+
+### 3. SSH Access (Optional)
+
+**Note:** SSH is **NOT enabled by default** in the Waydroid LXC container. The scripts do not install or configure openssh-server.
+
+If you need SSH access, you can enable it manually:
+
+#### Enable SSH in Your Container:
+
+```bash
+# 1. Enter the container
+pct enter <container-id>
+
+# 2. Install openssh-server
+apt-get update
+apt-get install -y openssh-server
+
+# 3. Enable and start SSH service
+systemctl enable ssh
+systemctl start ssh
+
+# 4. (Optional) Set root password for SSH login
+passwd root
+
+# 5. (Optional) Configure SSH to allow root login with password
+# Edit /etc/ssh/sshd_config and ensure:
+# PermitRootLogin yes
+# PasswordAuthentication yes
+sed -i 's/#PermitRootLogin.*/PermitRootLogin yes/' /etc/ssh/sshd_config
+sed -i 's/PermitRootLogin.*/PermitRootLogin yes/' /etc/ssh/sshd_config
+
+# 6. Restart SSH service
+systemctl restart ssh
+```
+
+#### Connect via SSH:
+
+```bash
+# From any machine on your network
+ssh root@<container-ip>
+
+# Example
+ssh root@192.168.1.100
+```
+
+**Security Recommendation:** Use SSH key-based authentication instead of passwords:
+
+```bash
+# On your client machine, copy your SSH public key
+ssh-copy-id root@<container-ip>
+
+# Or manually add your key inside the container
+mkdir -p /root/.ssh
+chmod 700 /root/.ssh
+echo "your-public-key-here" >> /root/.ssh/authorized_keys
+chmod 600 /root/.ssh/authorized_keys
+```
+
+### 4. REST API (Programmatic)
+For automation and Home Assistant integration:
+
+```bash
+# Get API token from container
+pct exec <container-id> -- cat /etc/waydroid-api/token
+
+# Example API call
+curl -H "Authorization: Bearer YOUR_TOKEN" \
+     http://<container-ip>:8080/status
+```
+
+See [Home Assistant Integration](docs/HOME_ASSISTANT.md) for complete API documentation.
+
+### Connection Summary
+
+| Method | Use Case | Default Port | Enabled by Default |
+|--------|----------|--------------|-------------------|
+| **Proxmox Console** | Direct container access | N/A | ✅ Yes |
+| **VNC** | Graphical Android interface | 5900 | ✅ Yes |
+| **REST API** | Automation & Home Assistant | 8080 | ✅ Yes |
+| **SSH** | Remote terminal access | 22 | ❌ No (manual setup required) |
+
+### Finding Your Container IP
+
+```bash
+# From Proxmox host
+pct exec <container-id> -- hostname -I
+
+# Or from inside container
+hostname -I
+
+# Via Proxmox web UI
+# Navigate to container → Summary → IP Address
+```
+
 ## Requirements
 
 ### Hardware
