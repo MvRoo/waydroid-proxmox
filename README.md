@@ -84,7 +84,7 @@ pct enter 100
 You can also use the Proxmox web UI:
 - Navigate to your container in the Proxmox web interface
 - Click on "Console" in the left menu
-- This gives you a root shell inside the container
+- This gives you a root shell inside the container.
 
 ### 2. VNC Access (Graphical)
 For graphical access to the Android interface:
@@ -156,6 +156,8 @@ systemctl restart ssh
 
 **Option B: Password Authentication (Less Secure)**
 
+⚠️ **Warning:** Password authentication is vulnerable to brute-force attacks. Use strong passwords and consider using fail2ban or switching to key-based authentication.
+
 ```bash
 # Set root password for SSH login
 passwd root
@@ -167,8 +169,6 @@ sed -i 's/#*PasswordAuthentication.*/PasswordAuthentication yes/' /etc/ssh/sshd_
 # Restart SSH service
 systemctl restart ssh
 ```
-
-⚠️ **Warning:** Password authentication is vulnerable to brute-force attacks. Use strong passwords and consider using fail2ban or switching to key-based authentication.
 
 #### Connect via SSH:
 
